@@ -4,9 +4,10 @@
         "declaration": true,
         "outDir": "dist",
         "target": "es5",
+        "lib": [ "es6" ],
         "jsx": "react"
     },
     "files": [
-        "./src/CurrencyInput.tsx"
+        "./src/currencyBeautify.ts"
     ]
 }
