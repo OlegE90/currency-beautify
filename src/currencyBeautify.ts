@@ -57,7 +57,7 @@ export default class {
     }
 
     changeCurrentPosition = (number: number): void => {
-        console.log(number);
+        //console.log(number);
         this.state.focusPosition = this.state.focusPosition ? this.state.focusPosition + number : null;
     };
 
@@ -76,7 +76,7 @@ export default class {
             value => value.index + 1 <= this.getPrevFocusPosition()
         ).length;
 
-        console.log("next - prev", newSymbols, pastedSymbols, focusPosition);
+        //console.log("next - prev", newSymbols, pastedSymbols, focusPosition);
         this.changeCurrentPosition(next - prev);
     };
 

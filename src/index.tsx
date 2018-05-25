@@ -39,7 +39,7 @@ class CurrencyInput extends React.Component<IProps, IState> {
     removeNotAvailableSymbol = (value: string): string => {
         const { regExp } = this.props;
 
-        if (!regExp) return value;
+        if (!regExp || !value) return value;
 
         const isAvailableSymbol = !!((value[value.length - 1].match(regExp) || []).length);
 
@@ -89,7 +89,7 @@ class CurrencyInput extends React.Component<IProps, IState> {
 
 class App extends React.Component<{}, {}> {
     handleChange = (value: string) => {
-        console.log(value);
+       // console.log(value);
     };
 
     render() {
