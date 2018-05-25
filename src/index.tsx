@@ -48,12 +48,11 @@ class CurrencyInput extends React.Component<IProps, IState> {
 
     handleChange = (e: any): void => {
         const target = e.target;
-        const { onChange, delimiter } = this.props;
+        const { onChange } = this.props;
         let _value = this.removeNotAvailableSymbol(target.value);
 
         const { value, focusPosition } = this.currencyCounter.recount({
             value: _value,
-            delimiter,
             focusPosition: target.selectionStart,
             keyPress: this.keyPress
         });
