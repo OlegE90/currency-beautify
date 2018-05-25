@@ -2,22 +2,33 @@ import * as React from "react";
 import { IPastedSymbols } from "./models";
 import { separateNumber } from "./utils";
 
-interface IProps {
-    delimeter?: string;
+/**
+ * @prop {string} [delimiter].
+ * @prop {object} [regExp].
+ * @prop {Function} onChange.
+ */
+export interface IProps {
+    delimiter?: string;
+    regExp?: object;
     onChange: (value: string) => void;
 }
 
-interface IState {
+/**
+ * @prop {string} value.
+ * @prop {IPastedSymbols[]} pastedSymbols.
+ */
+export interface IState {
     value: string;
     pastedSymbols: IPastedSymbols[];
 }
 
 class CurrencyInput extends React.Component<IProps, IState> {
     keyPress?: number;
-    focusPostion?: number;
+    focusPosition?: number;
 
     static defaultProps: Partial<IProps> = {
-        delimeter: " "
+        delimiter: " ",
+        regExp: /[0-9]/
     };
 
     state = {
@@ -25,32 +36,28 @@ class CurrencyInput extends React.Component<IProps, IState> {
         pastedSymbols: null
     };
 
-    changeCurrentPositon = (number: number): void => {
+    changeCurrentPosition = (number: number): void => {
         console.log(number);
-        this.focusPostion = this.focusPostion ? this.focusPostion + number : null;
+        this.focusPosition = this.focusPosition ? this.focusPosition + number : null;
     };
 
-    removeDelimetr = (target: any): string => {
-        const { value, selectionStart } = target;
+    removeDelimiter = (value: string, focusPosition: number): string => {
         const { pastedSymbols } = this.state;
         if (!pastedSymbols) return value;
 
         let newValue = value;
 
-        if (pastedSymbols.find(({ index }) => selectionStart === index)) {
+        if (pastedSymbols.find(({ index }) => focusPosition === index)) {
             if (this.keyPress === 8) {
-                newValue =
-                    value.slice(0, selectionStart - 1) + value.slice(selectionStart);
-                //this.changeCurrentPositon(-1);
+                newValue = value.slice(0, focusPosition - 1) + value.slice(focusPosition);
+                //this.changeCurrentPosition(-1);
             }
         }
 
         return newValue;
     };
 
-    getPrevFocusPostion = (): number => {
-        return this.focusPostion + (this.keyPress === 8 ? 1 : -1);
-    };
+    getPrevFocusPosition = (): number => this.focusPosition + (this.keyPress === 8 ? 1 : -1);
 
     recountFocus = (newSymbols: IPastedSymbols[]): void => {
         const { pastedSymbols } = this.state;
@@ -63,22 +70,32 @@ class CurrencyInput extends React.Component<IProps, IState> {
 
         // Сколько символов перед focus-ом в текущем состоянии.
         const next = newSymbols.filter(
-            value => value.index + 1 <= this.focusPostion
+            value => value.index + 1 <= this.focusPosition
         ).length;
         // Сколько символов было перед focus-ом в предыдущем состоянии.
         const prev = pastedSymbols.filter(
-            value => value.index + 1 <= this.getPrevFocusPostion()
+            value => value.index + 1 <= this.getPrevFocusPosition()
         ).length;
 
-        console.log("next - prev", newSymbols, pastedSymbols, this.focusPostion);
-        this.changeCurrentPositon(next - prev);
+        console.log("next - prev", newSymbols, pastedSymbols, this.focusPosition);
+        this.changeCurrentPosition(next - prev);
     };
 
-    clearValue = (value, delimeter) => {
+    removeNotAvailableSymbol = (value) => {
+        const { regExp } = this.props;
+
+        if (!regExp) return;
+
+        const isAvailableSymbol = !!((value[value.length - 1].match(regExp) || []).length);
+
+        return isAvailableSymbol ? value : value.slice(0, value.length - 1);
+    };
+
+    clearValue = (value, delimiter): string => {
         let newValue = "";
 
         for (let i = 0; value.length > i; i++) {
-            newValue += value[i] === delimeter ? "" : value[i];
+            newValue += value[i] === delimiter ? "" : value[i];
         }
 
         return newValue;
@@ -86,15 +103,15 @@ class CurrencyInput extends React.Component<IProps, IState> {
 
     handleChange = (e: any): void => {
         const target = e.target;
-        const { delimeter, onChange } = this.props;
-        const formatedValue = this.removeDelimetr(target);
-        const { value, pastedSymbols } = separateNumber(
-            this.clearValue(formatedValue.toString(), delimeter),
-            delimeter
-        );
+        const { delimiter, onChange } = this.props;
+        let _value = this.removeNotAvailableSymbol(target.value);
+
+        const formattedValue = this.removeDelimiter(_value, target.selectionStart);
+        const cleanValue = this.clearValue(formattedValue.toString(), delimiter);
+        const { value, pastedSymbols } = separateNumber(cleanValue, delimiter);
 
         // Пересчет позиции фокуса.
-        this.focusPostion = target.selectionStart;
+        this.focusPosition = target.selectionStart;
         this.recountFocus(pastedSymbols);
 
         this.setState(
@@ -103,8 +120,8 @@ class CurrencyInput extends React.Component<IProps, IState> {
                 pastedSymbols
             },
             () => {
-                target.selectionStart = this.focusPostion;
-                target.selectionEnd = this.focusPostion;
+                target.selectionStart = this.focusPosition;
+                target.selectionEnd = this.focusPosition;
                 onChange(value);
             }
         );

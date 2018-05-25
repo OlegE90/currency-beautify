@@ -1,15 +1,17 @@
 import { IPastedSymbols } from "./models";
 
+export interface IResult {
+    value: string;
+    pastedSymbols: IPastedSymbols[];
+}
+
 /*
  * Разбивает цифру на группы из трех чисел.
  *
  * value {string} Цифра которую нужно разбить.
- * delimeter {string} Разделитель.
+ * delimiter {string} Разделитель.
  */
-export const separateNumber: {
-    value: string;
-    pastedSymbols: IPastedSymbols[];
-} = (value: string, delimeter: string) => {
+export const separateNumber = (value: string, delimiter: string): IResult => {
     const length = value.length;
     let iterator = 0;
     let result = "";
@@ -17,7 +19,7 @@ export const separateNumber: {
 
     while (length > iterator) {
         let currentPosition = length - 1 - iterator;
-        let pastedSymbol = iterator > 0 && iterator % 3 === 0 ? delimeter : "";
+        let pastedSymbol = iterator > 0 && iterator % 3 === 0 ? delimiter : "";
         pastedSymbol &&
         pastedSymbols.push({
             symbol: pastedSymbol,
@@ -28,11 +30,11 @@ export const separateNumber: {
         iterator++;
     }
 
-    pastedSymbols = pastedSymbols.map(value => ({
-        ...value,
-        index: result.length - value.index
+    pastedSymbols = pastedSymbols.map(item => ({
+        ...item,
+        index: result.length - item.index
     }));
 
-    //console.log(pastedSymbols);
+
     return { value: result, pastedSymbols };
 };

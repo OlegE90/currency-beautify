@@ -13,7 +13,6 @@ module.exports = (env) => ({
         libraryTarget: 'umd',
         filename: env.prod ? 'CurrencyInput.js' : 'bundle.js',
     },
-    devtool: env.prod ? 'source-map' : 'eval',
     resolve: {
         extensions: ['.js', '.ts', '.tsx'],
         modules: ['node_modules', 'src'],
@@ -73,11 +72,7 @@ module.exports = (env) => ({
         } : {})
     },
     plugins: [
-        ...(env.prod ? [
-            new webpack.optimize.UglifyJsPlugin({ minimize: true }),
-            new ExtractTextPlugin("Pagination.css")
-        ] : [
-            new ExtractTextPlugin('[name].css'),
+        ...(env.prod ? [] : [
             new HtmlWebpackPlugin({
                 template: path.resolve('src/assets/index.html'),
                 filename: 'index.html',
