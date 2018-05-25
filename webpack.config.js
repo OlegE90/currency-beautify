@@ -7,11 +7,11 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = (env) => ({
     target: 'web',
     context: path.resolve('src'),
-    entry: env.prod ? './CurrencyInput.tsx' : './index.tsx',
+    entry: env.prod ? './currencyBeautify.ts' : './index.tsx',
     output: {
         path: path.resolve('dist'),
         libraryTarget: 'umd',
-        filename: env.prod ? 'CurrencyInput.js' : 'bundle.js',
+        filename: env.prod ? 'currencyBeautify.js' : 'bundle.js',
     },
     resolve: {
         extensions: ['.js', '.ts', '.tsx'],

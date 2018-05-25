@@ -1,12 +1,12 @@
 {
-    "name": "currency-input",
+    "name": "currency-beautify",
     "version": "1.0.0",
-    "description": "Currency input",
-    "main": "./dist/CurrencyInput.js",
-    "types": "./dist/currencyInput.d.ts",
+    "description": "CurrencyBeautify",
+    "main": "./dist/currencyBeautify.js",
+    "types": "./dist/currencyBeautify.d.ts",
     "repository": {
         "type": "git",
-        "url": "https://github.com/OlegE90/currency-input"
+        "url": "https://github.com/OlegE90/currency-beautify"
     },
     "license": "MIT",
     "keywords": [
