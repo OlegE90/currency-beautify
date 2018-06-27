@@ -1,4 +1,4 @@
-import { separateNumber } from '../utils'
+import { separateNumber } from "../utils";
 
 test('test separateNumber', async () => {
     const millionResult = {
