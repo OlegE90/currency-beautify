@@ -51,7 +51,7 @@
     },
     "scripts": {
         "prebuild": "rimraf dist",
-        "test": "jest --watch",
+        "test": "jest --watchAll",
         "test:e2e:dev": "npm-run-all --parallel start cy:open",
         "test:e2e": "npm-run-all --parallel --race cy:run",
         "cy:open": "cypress open",
